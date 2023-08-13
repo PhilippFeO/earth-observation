@@ -1,5 +1,5 @@
 # NDVI #
-This directory documents my calculation of the NDVI of central bavaria (near the lower center lies Munich). Via Google Earth Engine I retrieve the proper satellite imagery form [Landsat 8 – Wikipedia](https://en.wikipedia.org/wiki/Landsat_8) as `GeoTIFF` containing all 19 bands. The following steps include:
+This directory documents my calculation of the NDVI of central bavaria (near the lower center lies Munich). Via Google Earth Engine I retrieve the proper satellite imagery form [Landsat 8 – Wikipedia](https://en.wikipedia.org/wiki/Landsat_8) as `GeoTIFF` containing all 19 bands. The following steps include (I use `numpy`, `rasterio` and `matplotlib`, i.e. no GEE):
   - Reading necessary bands from image
   - Preprocessing values for higher quality results (f.i. not whole 16bit color range is exploited)
   - Calculating NDVI
