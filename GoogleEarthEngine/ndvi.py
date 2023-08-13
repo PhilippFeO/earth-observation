@@ -11,29 +11,28 @@ def save_sc_geotiff(sc_ndvi, meta, name='ndvi-sc'):
     meta.update(count=1)
     with rasterio.open(f'{geotiff_dir}/{name}.geotiff', 'w', **meta) as img:
         sc_ndvi = (sc_ndvi * 255).astype('uint8')
-        # print(ndvi.shape)
         img.write(sc_ndvi, 1)
 
 
-def save_ylgn_geotiff(ylgn_ndvi, meta, name='ndvi-ylgn'):
+def save_whylgn_geotiff(whylgn_ndvi, meta, name='ndvi-whylgn'):
     ''' Save an image as geotiff representing the NDVI using 3 channels to have a gradient from white/yellow to green instead of pure gray scale. '''
     meta.update(count=3)
     with rasterio.open(f'{geotiff_dir}/{name}.geotiff', 'w', **meta) as img:
         # Convert from [0, 1] to [0, 255]
-        ylgn_ndvi = (ylgn_ndvi * 255).astype('uint8')
-        # <ylgn_ndvi.shape> = (800, 777, 4) but has to be (3, 800, 777)
-        ylgn_ndvi = np.transpose(ylgn_ndvi, (2, 0, 1))
-        img.write(ylgn_ndvi)
+        whylgn_ndvi = (whylgn_ndvi * 255).astype('uint8')
+        # <whylgn_ndvi.shape> = (800, 777, 4) but has to be (3, 800, 777)
+        whylgn_ndvi = np.transpose(whylgn_ndvi, (2, 0, 1))
+        img.write(whylgn_ndvi)
 
 
-def save_ylgn_legend(ylgn_ndvi, cmap, name='ndvi-ylgn-legend'):
+def save_whylgn_legend(whylgn_ndvi, cmap, name='ndvi-whylgn-legend'):
     ''' Save gradient NDVI using a matplotlib plot and display a color gradient legend based on <cmap> '''
     width_pixels = 1000
     height_pixels = 1000
     # Convert to inches
     plt.figure(figsize=(width_pixels / 100, height_pixels / 100))
 
-    plt.imshow(ylgn_ndvi, cmap=cm)
+    plt.imshow(whylgn_ndvi, cmap=cmap)
     plt.colorbar()  # Show color gradient, s. doc for setting ticks
     # plt.show()
     plt.axis('off')
@@ -64,26 +63,27 @@ if __name__ == "__main__":
     # Adjust values (s. docstring of <adjust_values>)
     min, max = 0.0, 0.4
     # truncate values
-    ndvi = np.where(ndvi < min, min, np.where(ndvi > max, max, ndvi))
+    ndvi = np.clip(ndvi, min, max)
     # scale [.0, .4] to [.0, 1.]
     ndvi = ndvi * 2.5
 
-    # get_cmap() doc:
-    #   https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.get_cmap.html
-    # Built-in Colormaps:
-    #   https://matplotlib.org/stable/tutorials/colors/colormaps.html
-    cm = plt.get_cmap('YlGn')
+    # Create a colormap using LinearSegmentedColormap
+    #   Own colormap because built-in <YlGn> maps white, i.e. 'nodata' onto bright yellow which doesn't look appealing 'outside' the image. I prefere plain white.
+    colors = ["white", "yellow", "green"]
+    color_map = matplotlib.colors.LinearSegmentedColormap.from_list(
+        "WhYlGn", colors)
+
     # Apply colormap. Result is a RGBA array but I only need RGB values.
-    ylgn_ndvi = cm(ndvi)[:, :, :3]
+    whylgn_ndvi = color_map(ndvi)[:, :, :3]
 
     # Saving np-array as PNG (not embedded in a plot)
-    matplotlib.image.imsave(f'{geotiff_dir}/ndvi-ylgn.png', ylgn_ndvi)
+    matplotlib.image.imsave(f'{geotiff_dir}/ndvi-whylgn.png', whylgn_ndvi)
 
     # Save image as matplotlib plot with color gradient legend
-    save_ylgn_legend(ylgn_ndvi, cm)
+    save_whylgn_legend(whylgn_ndvi, color_map)
 
     # Save yellow-green NDVI image as geotiff
-    save_ylgn_geotiff(ylgn_ndvi, out_meta.copy())
+    save_whylgn_geotiff(whylgn_ndvi, out_meta.copy())
 
     # Save one channel NDVI image as geotiff
     save_sc_geotiff(ndvi, out_meta.copy())
