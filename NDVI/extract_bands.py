@@ -60,7 +60,7 @@ def compose_bands_to_rgb(geotiff):
     data = adjust_values(data, 7000, 16000)
 
     # Save RGB image
-    with rasterio.open('./geotiffs/rgb.tif', 'w', **output_meta) as m:
+    with rasterio.open('./geotiffs/rgb.tiff', 'w', **output_meta) as m:
         m.write(data)
 
 
@@ -76,6 +76,7 @@ if __name__ == "__main__":
                         type=str)
     args = parser.parse_args()
 
+    assert 1 <= args.band <= 19, '<BAND> has to be in [1, 19].'
     extract_band(geotiff, args.band, args.band_name)
 
     # compose_bands_to_rgb(geotiff)
