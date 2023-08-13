@@ -6,8 +6,8 @@ This directory documents my calculation of the NDVI of central bavaria (near the
 
 ## Produced images
 A simple RGB-image:
-![](./geotiffs/rgb.tif)
+![](./geotiffs/rgb.png)
 
 The corresponding NDVI:
 ![](./geotiffs/ndvi-whylgn-legend.png)
-(The scaling of the image is lower than the original file. I don't know why and how to fit to it's original dimensions.)
+(`matplotlib`'s scaling of the image is lower than the original file. I don't know why and how to fit to it's original dimensions.)
