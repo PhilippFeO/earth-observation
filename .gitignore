@@ -3,7 +3,7 @@ workshop-remote-sensing
 *.json
 *.ipynb_checkpoints
 
-GoogleEarthEngine/Remote Sensing Camp.html
-GoogleEarthEngine/multi_band-800*
-GoogleEarthEngine/geotiffs/*
-GoogleEarthEngine/__pycache__/*
+NDVI/Remote Sensing Camp.html
+NDVI/multi_band-800*
+NDVI/geotiffs/*
+NDVI/__pycache__/*
