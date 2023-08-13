@@ -1,5 +1,9 @@
 # NDVI #
-This directory documents my calculation of the NDVI of central bavaria (near the lower center lies Munich). Via Google Earth Engine I retrieve the proper satellite imagery form [Landsat 8 – Wikipedia](https://en.wikipedia.org/wiki/Landsat_8) as `GeoTIFF` containing all 19 bands and process it further, f.i. by extracting bands individually and merging them to produce new images and indices.
+This directory documents my calculation of the NDVI of central bavaria (near the lower center lies Munich). Via Google Earth Engine I retrieve the proper satellite imagery form [Landsat 8 – Wikipedia](https://en.wikipedia.org/wiki/Landsat_8) as `GeoTIFF` containing all 19 bands. The following steps include:
+  - Reading necessary bands from image
+  - Preprocessing values for higher quality results (f.i. not whole 16bit color range is exploited)
+  - Calculating NDVI
+  - Saving image/generating plot
 
 Long term goal: Use a Geopolygon to filter the city of Munich and calculate it's NDVI.
 
