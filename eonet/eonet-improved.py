@@ -24,7 +24,9 @@ class EonetEvent():
 
 limit = -1  # All events in period
 days = 365  # last year
-file_names = ('eonet/eonet_data.json', 'eonet/categoryIDs_data_eonet.json')
+folder = './eonet-data'
+file_names = (f'{folder}/eonet_data.json',
+              f'{folder}/categoryIDs_data_eonet.json')
 data = []
 
 # Fetch data (via request or read from file)
