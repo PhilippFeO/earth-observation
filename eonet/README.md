@@ -5,4 +5,4 @@ The script [eonet-improved.py](./eonet-improved.py) requests data from the [NASA
   2. Providing a service that links those natural events to thematically-related web service-enabled image sources (e.g., via WMS, WMTS, etc.).
 
 A plot of the currently (2023-08-03) available data is provided below:
-![](./eonet/eonet_events_plot.png)
+![](./eonet-data/eonet_events_plot.png)
