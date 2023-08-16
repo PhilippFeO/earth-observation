@@ -10,3 +10,5 @@ NDVI/__pycache__/*
 NDVI/info.txt
 
 todo.txt
+*.zip
+
