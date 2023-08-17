@@ -32,5 +32,6 @@ out_meta.update({"driver": "GTiff",
                  "width": out_image.shape[2],
                  "transform": out_transform})
 
-with rasterio.open(f"{folder}/Masked_{file}.tif", "w", **out_meta) as dest:
+# <file> ends in .TIF, no extension needed
+with rasterio.open(f"{folder}/Masked_{file}", "w", **out_meta) as dest:
     dest.write(out_image)
