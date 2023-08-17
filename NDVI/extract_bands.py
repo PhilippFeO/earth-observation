@@ -28,7 +28,7 @@ def adjust_values(data, min, max):
     #       make <max> the highest value in the image
     #   By doing so <tmp * m - t> won't produce values outside 0-255.
     #       (Before, I didn't truncate and had artifacts in the rgb-image)
-    tmp = np.where(data < min, min, np.where(data > max, max, data))
+    tmp = np.clip(data, min, max)
     m = 255 / (max - min)
     t = min * 255 / (max - min)
     tmp = tmp * m - t  # The actual mapping
