@@ -9,6 +9,7 @@ NDVI/geotiffs/*
 NDVI/__pycache__/*
 NDVI/info.txt
 NDVI/Munich/
+NDVI/USGS
 
 todo.txt
 *.zip
