@@ -10,9 +10,9 @@ Next goal: Evaluate quantitatively the NDVI
 
 ~~Next goal: Use a Geopolygon to filter the city of Munich and calculate it's NDVI.~~
 
-
 - [geojson2shapefile_downsampling.py](./geojson2shapefile_downsampling.py): Converts a GeoJSON file of the city of Munich containing it's districts into a Shapefile resembling the border of Munich (without districts) and applies downsampling because the USGS Earth Explorer only permits <500 vertices.
 - [ndvi.py](./ndvi.py): Calculates the NDVI; currently it produces a bunch of images `GeoTIFF`s and `PNG`s, because I don't know which format works best for upcoming tasks (probably `GeoTIFF` due to additional embedded geo-metadata).
+- [WIP] [make_rgb.py](./make_rgb.py): Combines the red, green and blue bands to an RGB file.
 - [extract_bands.py](./extract_bands.py): Isolates band from a GeoTIFF containing 1 <= bands <= 19 bands and saves it under [./geotiffs/](./geotiffs/); Usage: `python3 extract_bands.py BAND BAND_NAME`.
 
 ## Produced images
