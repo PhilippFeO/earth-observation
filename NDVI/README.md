@@ -7,6 +7,7 @@ This directory documents my calculation of the NDVI of central bavaria (near the
 
 Long term goal: Use a Geopolygon to filter the city of Munich and calculate it's NDVI.
 
+- [geojson2shapefile_downsampling.py](./geojson2shapefile_downsampling.py): Converts a GeoJSON file of the city of Munich containing it's districts into a Shapefile resembling the border of Munich (without districts) and applies downsampling because the USGS Earth Explorer only permits <500 vertices.
 - [extract_bands.py](./extract_bands.py): Isolates band and saves it under [./geotiffs/](./geotiffs/); Usage: `python3 extract_bands.py BAND BAND_NAME`.
 - [ndvi.py](./ndvi.py): Calculates the NDVI; currently it produces a bunch of images `GeoTIFF`s and `PNG`s, because I don't know which format works best for upcoming tasks (probably `GeoTIFF` due to additional embedded geo-metadata).
 
