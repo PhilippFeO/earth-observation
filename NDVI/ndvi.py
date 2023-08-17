@@ -78,6 +78,7 @@ if __name__ == "__main__":
                      b4red + np.finfo(float).eps)  # has type 'float32'
 
     # Adjust values (s. docstring of <adjust_values>)
+    # TODO: Use <adjust_values()> from <adjust_values.py> <17-08-2023>
     min, max = 0.0, 0.4
     # truncate values
     ndvi = np.clip(ndvi, min, max)

@@ -3,7 +3,7 @@ Reads image of band {red, green, blue} in <args.band_dir> (i.e., all images have
 """
 import os
 import rasterio
-from extract_bands import adjust_values
+from adjust_values import adjust_values
 import argparse
 import numpy as np
 
