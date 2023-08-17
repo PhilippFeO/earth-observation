@@ -1,3 +1,11 @@
+"""
+Corps a geometry saved as a shapefile from a GeoTIFF.
+
+Usage:
+    python isolate_shape.py <GeoTIFF> <Shapefile>
+
+"""
+
 from os.path import split
 from rasterio.mask import mask
 import rasterio
