@@ -49,21 +49,6 @@ def extract_band(geotiff, band, name):
         sc.write(data, 1)
 
 
-def compose_bands_to_rgb(geotiff):
-    """ Merge bands 4 (red), 3 (green), 2 (blue) into one rgb image """
-    output_meta = geotiff.meta.copy()
-    output_meta.update(count=3,
-                       dtype=rasterio.uint8,  # interpret values within 0-255
-                       nodata=0)  # placeholder if no data is avialable, fi. at the edges
-
-    data = geotiff.read([4, 3, 2])
-    data = adjust_values(data, 7000, 16000)
-
-    # Save RGB image
-    with rasterio.open('./geotiffs/rgb.tiff', 'w', **output_meta) as m:
-        m.write(data)
-
-
 if __name__ == "__main__":
     geotiff = rasterio.open('./geotiffs/all_bands_800.geotiff')
 
@@ -78,8 +63,6 @@ if __name__ == "__main__":
 
     assert 1 <= args.band <= 19, '<BAND> has to be in [1, 19].'
     extract_band(geotiff, args.band, args.band_name)
-
-    # compose_bands_to_rgb(geotiff)
 
     geotiff.close()
 
