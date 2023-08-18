@@ -2,11 +2,10 @@
 Reads image of band {red, green, blue} in <args.band_dir> (i.e., all images have to be transfered there beforehand) and combines them to an RGB image. This saved under '<args.band_dir>/out/combined_bands.tif'.
 """
 
-import os
 import rasterio
 import argparse
 from adjust_values import adjust_values
-from bands_to_array import bands_to_array, create_out_dir
+from read_write_functions import bands_to_array, create_out_dir
 
 # TODO: adjust band values individually to control the influence of a band <17-08-2023>
 
