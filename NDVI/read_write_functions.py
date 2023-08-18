@@ -38,3 +38,18 @@ def bands_to_array(bands_dir: str,
                     dtype=rasterio.uint8,
                     nodata=0)
     return bands, out_meta
+
+
+def create_out_dir(bands_dir: str) -> str:
+    """Create the output directory':bands_dir:/out' for the produced image.
+
+    :bands_dir: The directory to create an 'out' dir in. Usually, the image for processing are suited in :bands_dir:.
+
+    :returns: Path of the created directory"""
+    out_dir = f'{bands_dir}/out'
+    try:
+        os.mkdir(out_dir)
+        print(f'Created:\n\t{out_dir}')
+    except FileExistsError:  # Error occurs when <out_dir> exists; this is nothing to worry about
+        pass
+    return out_dir
