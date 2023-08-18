@@ -18,8 +18,8 @@ Next goal: Evaluate quantitatively the NDVI
 
 ## Produced images
 The NDVI, data collected was on 2023-03-28, the greener, the more vegetation:
-![](./USGS/image_working_dir/NDVI/out/ndvi-whylgn-legend.png)
-(`matplotlib`'s scaling of the image is lower than the original file. I don't know why and how to fit to it's original dimensions.)
+![](./USGS/image_working_dir/NDVI/out/legend_cmap_ndvi.png)
+(`matplotlib`'s scaling of the image is lower than the original file. I don't know why and how to zoom/scale it.)
 
 There is also a RGB image of the scene but GitHub doesn't embed the file and I don't know why. Anyway, you can find it in [./geotiffs/](./geotiffs/) (as `rgb.png`).
 ![](./geotiffs/rgb.tiff)
