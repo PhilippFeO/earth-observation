@@ -5,10 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image
 import argparse
-from bands_to_array import bands_to_array, create_out_dir
+from read_write_functions import bands_to_array, create_out_dir
 
 
-def save_sc_geotiff(sc_ndvi, meta, name='ndvi-sc'):
+def save_sc_geotiff(sc_ndvi, meta, name='sc-ndvi'):
     ''' Save single channel NDVI image as geotiff. <sc_ndvi> contains values in [0, 1] (of type <float32>) '''
     meta.update(count=1)
     with rasterio.open(f'{out_dir}/{name}.geotiff', 'w', **meta) as img:
@@ -16,7 +16,7 @@ def save_sc_geotiff(sc_ndvi, meta, name='ndvi-sc'):
         img.write(sc_ndvi, 1)
 
 
-def save_whylgn_geotiff(whylgn_ndvi, meta, name='ndvi-whylgn'):
+def save_whylgn_geotiff(whylgn_ndvi, meta, name='cmap_ndvi'):
     ''' Save an image as geotiff representing the NDVI using 3 channels to have a gradient from white/yellow to green instead of pure gray scale. '''
     meta.update(count=3)
     with rasterio.open(f'{out_dir}/{name}.geotiff', 'w', **meta) as img:
@@ -27,7 +27,7 @@ def save_whylgn_geotiff(whylgn_ndvi, meta, name='ndvi-whylgn'):
         img.write(whylgn_ndvi)
 
 
-def save_whylgn_legend(whylgn_ndvi, cmap, name='ndvi-whylgn-legend'):
+def save_whylgn_legend(whylgn_ndvi, cmap, name='legend_cmap_ndvi'):
     ''' Save gradient NDVI using a matplotlib plot and display a color gradient legend based on <cmap> '''
     width_pixels = 1000
     height_pixels = 1000
@@ -73,19 +73,26 @@ if __name__ == "__main__":
     color_map = matplotlib.colors.LinearSegmentedColormap.from_list(
         "WhYlGn", colors)
 
-    # Apply colormap. Result is a RGBA array but I only need RGB values.
-    whylgn_ndvi = color_map(ndvi)[:, :, :3]
+    # Apply colormap; Result is a RGBA array
+    cmap_ndvi = color_map(ndvi)
 
+    # Replace alpha channel by mask
+    mask = np.load('./shapes_and_masks/munich/munich_mask.npy')
+    cmap_ndvi[:, :, 3] = mask
+
+    # Create output directory for produced images
     out_dir = create_out_dir(args.image_dir)
 
     # Saving np-array as PNG (not embedded in a plot)
-    matplotlib.image.imsave(f'{out_dir}/ndvi-whylgn.png', whylgn_ndvi)
+    matplotlib.image.imsave(f'{out_dir}/cmap_ndvi.png', cmap_ndvi)
 
     # Save image as matplotlib plot with color gradient legend
-    save_whylgn_legend(whylgn_ndvi, color_map)
+    save_whylgn_legend(cmap_ndvi, color_map)
 
     # Save yellow-green NDVI image as geotiff
-    save_whylgn_geotiff(whylgn_ndvi, out_meta.copy())
+    # Remove alphy channel, GeoTIFF can't handle alpha values (as far as I know)
+    # no_alph_ndvi = color_map(ndvi)[:, :, :3]
+    # save_whylgn_geotiff(no_alph_ndvi, out_meta.copy())
 
     # Save one channel NDVI image as geotiff
     save_sc_geotiff(ndvi, out_meta.copy())
