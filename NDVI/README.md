@@ -6,10 +6,11 @@ This directory documents my calculation of the NDVI of Munich. Via [USGS Earth E
   - Saving image/generating plot
 I use `numpy`, `rasterio`, `geopandas`, `shapely` and `matplotlib` to conduct all operations.
 
-Next goal: Evaluate quantitatively the NDVI
+## Roadmap
+Evaluate quantitatively the NDVI  
+~~Use a Geopolygon to filter the city of Munich and calculate it's NDVI.~~
 
-~~Next goal: Use a Geopolygon to filter the city of Munich and calculate it's NDVI.~~
-
+## Overview
 - [adjust_values.py](./adjust_values.py): Satellite data must be clipped to improve quality. Full explanation given in the file directly.
 - [geojson2shapefile_downsampling.py](./geojson2shapefile_downsampling.py): Converts a GeoJSON file of the city of Munich containing it's districts into a Shapefile resembling the border of Munich (without districts) and applies downsampling because the USGS Earth Explorer only permits <500 vertices.
 - [isolate_shape.py](./isolate_shape.py): Corps a geometry saved as a shapefile from a GeoTIFF and also it's according mask as boolean array.
