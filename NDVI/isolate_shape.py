@@ -11,6 +11,7 @@ from rasterio.mask import mask
 import rasterio
 import fiona
 import argparse
+import numpy as np
 
 p = argparse.ArgumentParser("isolate_shape")
 p.add_argument("GeoTIFF",
@@ -29,17 +30,30 @@ with fiona.open(args.shapefile) as shapefile:
 geotiff = args.GeoTIFF
 folder, file = split(geotiff)  # split path to GeoTIFF
 
+# Retrieve mask of <geometry>, ie. a boolean array resembling the geometry
+#   Without "filled=False", outside the shape is filled with <nodata>/0 (and
+#   displayed as black).
+#   This is not desirable because this value might occure within the shape
+#   and decreases accuracy.
 with rasterio.open(f'{folder}/{file}', 'r') as src:
-    out_image, out_transform = mask(src, geometry, crop=True)
+    # out_image, out_transform = mask(src, geometry, crop=True)
+    out_image, out_transform = mask(src, geometry, crop=True, filled=False)
 
-out_meta = src.meta.copy()
 
 # save the resulting raster
+out_meta = src.meta.copy()
 out_meta.update({"driver": "GTiff",
                  "height": out_image.shape[1],
                  "width": out_image.shape[2],
                  "transform": out_transform})
+# print(out_meta)
 
 # <file> ends in .TIF, no extension needed
-with rasterio.open(f"{folder}/Masked_{file}", "w", **out_meta) as dest:
+with rasterio.open(f"{folder}/Nd_Masked_{file}", "w", **out_meta) as dest:
     dest.write(out_image)
+
+# Save the mask (for further calculations as in './ndvi.py')
+out_mask = out_image.mask[0]
+# <~out_mask> inverts masks (I need it vice versa than provided by rasterio)
+np.save('./shapes_and_masks/munich/munich_mask.npy', ~out_mask)
+# show(source=out_image.data, alpha=a)
