@@ -5,7 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.image
 import argparse
-import os
+from bands_to_array import bands_to_array, create_out_dir
 
 
 def save_sc_geotiff(sc_ndvi, meta, name='ndvi-sc'):
@@ -45,37 +45,19 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser("ndvi")
     p.add_argument("image_dir",
                    help="Directory containing the bands for calculating the NDVI.",
+                   nargs='?',
+                   default='./USGS/image_working_dir/NDVI/',
                    type=str)
     args = p.parse_args()
 
-    directory = os.fsencode(args.image_dir)
-    files = os.listdir(directory)
-    out_meta = None
-    bands = None  # image dimensions have to be red from metadata
-    for f in files:
-        # decode b-string to normal string
-        f = f.decode('utf-8')
-        band_file = os.fsdecode(f'{args.image_dir}/{f}')
-        if band_file.endswith(('.tif', '.TIF')):
-            band = rasterio.open(band_file)
-            # Initialize band array (especially with image dimensions)
-            if bands is None:
-                out_meta = band.meta.copy()
-                bands = np.empty((2,
-                                  out_meta['height'],
-                                  out_meta['width']))
-            # Fill band array with band values
-            if 'B4' in f:  # 'B4' is read
-                bands[0] = band.read(1)
-            else:  # Remaining is 'B5', which is near-IR
-                bands[1] = band.read(1)
-    band.close()
+    band_order = ('B4', 'B5')
+    bands, out_meta = bands_to_array(args.image_dir, band_order)
 
     # Calculate NDVI = (NIR - Red) / (NIR + Red)
     # Avoid dividing by 0 by adding smallest possible float to the divisor
     b4red, b5nearIR = bands[0], bands[1]
-    ndvi = np.divide(b5nearIR - b4red, b5nearIR +
-                     b4red + np.finfo(float).eps)  # has type 'float32'
+    ndvi = np.divide(b5nearIR - b4red,
+                     b5nearIR + b4red + np.finfo(float).eps)  # has type 'float32'
 
     # Adjust values (s. docstring of <adjust_values>)
     # TODO: Use <adjust_values()> from <adjust_values.py> <17-08-2023>
@@ -87,24 +69,14 @@ if __name__ == "__main__":
 
     # Create a colormap using LinearSegmentedColormap
     #   Own colormap because built-in <YlGn> maps white, i.e. 'nodata' onto bright yellow which doesn't look appealing 'outside' the image. I prefere plain white.
-    colors = ["white", "yellow", "green"]
+    colors = ["red", "yellow", "green"]
     color_map = matplotlib.colors.LinearSegmentedColormap.from_list(
         "WhYlGn", colors)
 
     # Apply colormap. Result is a RGBA array but I only need RGB values.
     whylgn_ndvi = color_map(ndvi)[:, :, :3]
 
-    # Create directory for output images
-    out_dir = f'{args.image_dir}/out'
-    try:
-        os.mkdir(out_dir)
-    except FileExistsError:
-        print('out-directory exists')
-
-    # Update metadata
-    out_meta.update(count=2,
-                    dtype=rasterio.uint8,
-                    nodata=0)
+    out_dir = create_out_dir(args.image_dir)
 
     # Saving np-array as PNG (not embedded in a plot)
     matplotlib.image.imsave(f'{out_dir}/ndvi-whylgn.png', whylgn_ndvi)
