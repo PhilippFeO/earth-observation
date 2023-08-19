@@ -49,7 +49,7 @@ out_meta.update({"driver": "GTiff",
 # print(out_meta)
 
 # <file> ends in .TIF, no extension needed
-with rasterio.open(f"{folder}/Nd_Masked_{file}", "w", **out_meta) as dest:
+with rasterio.open(f"{folder}/Masked_{file}", "w", **out_meta) as dest:
     dest.write(out_image)
 
 # Save the mask (for further calculations as in './ndvi.py')
