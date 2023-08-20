@@ -4,6 +4,7 @@ import os
 import matplotlib.image
 from read_write_functions import bands_to_array, create_out_dir, save_cmap_legend, save_sc_geotiff
 from evaluate_index import evaluate_index
+from apply_colormap import apply_colormap
 
 
 p = argparse.ArgumentParser("ndwi")
@@ -20,7 +21,7 @@ args = p.parse_args()
 band_order = ('B3', 'B5')
 bands, out_meta = bands_to_array(args.image_dir, band_order)
 
-""" Calculate ndwi = (NIR - Red) / (NIR + Red) """
+""" Calculate ndwi = (Green - NIR) / (Green + NIR) """
 # Avoid dividing by 0 by adding smallest possible float to the divisor
 b4green, b5nearIR = bands[0], bands[1]
 ndwi = np.divide(b4green - b5nearIR,
@@ -33,19 +34,15 @@ ndwi = np.divide(b4green - b5nearIR,
 min, max = 0., ndwi.max()
 ndwi = np.clip(ndwi, min, max)
 
+
 # Scale for better visual results
 ndwi = ndwi / max
 print("\nImage values (not calculated ones) were manipulated such that visual results are more appealing.\n")
 
-""" Apply colormap """
-# Create a colormap using LinearSegmentedColormap
-#   Own colormap because built-in <YlGn> maps white, i.e. 'nodata' onto bright yellow which doesn't look appealing 'outside' the image. I prefere plain white.
+"""Apply colormap and insert mask."""
 colors = ["yellow", "blue"]
-color_map = matplotlib.colors.LinearSegmentedColormap.from_list(
-    "WhYlGn", colors)
-
-# Apply colormap; Result is a RGBA array
-cmap_ndwi = color_map(ndwi)
+# cmap_ndwi is a RGBA array
+cmap_ndwi, color_map = apply_colormap(ndwi, colors)
 
 # Replace alpha channel by mask
 mask = np.load('./shapes_and_masks/munich/munich_mask.npy')
@@ -55,15 +52,15 @@ cmap_ndwi[:, :, 3] = mask
 # Create output directory for produced images
 out_dir = create_out_dir(args.image_dir)
 
-# Saving np-array as PNG (not embedded in a plot)
+# Saving np-array as PNG for valid transparency (not embedded in a plot)
 path_to_image = os.path.join(out_dir, 'cmap_ndwi.png')
 matplotlib.image.imsave(path_to_image, cmap_ndwi)
 
-# Save image as matplotlib plot with color gradient legend
+# matplotlib plot with color gradient legend
 path_to_image = os.path.join(out_dir, 'legend_cmap_ndwi.png')
 save_cmap_legend(cmap_ndwi, color_map, path_to_image)
 
-# Save one channel ndwi image as geotiff
+# One channel ndwi image as geotiff
 path_to_image = os.path.join(out_dir, 'sc_ndwi.geotiff')
 save_sc_geotiff(ndwi, out_meta.copy(), path_to_image)
 

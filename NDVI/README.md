@@ -12,6 +12,7 @@ Exploring more indices (maybe related to water)
 ~~Use a Geopolygon to filter the city of Munich and calculate it's NDVI.~~
 
 ## Overview
+- [apply_colormap.py](./apply_colormap.py): Color map the calculated index to have better visuals (and no gray scale image).
 - [adjust_values.py](./adjust_values.py): Satellite data must be clipped to improve quality. Full explanation given in the file directly.
 - [evaluate_NDVI](./evaluate_NDVI.py): Evaluate the NDVI quantitatively by calculating the average and percentage with >.75; s. "Produces images" for values.
 - [geojson2shapefile_downsampling.py](./geojson2shapefile_downsampling.py): Converts a GeoJSON file of the city of Munich containing it's districts into a Shapefile resembling the border of Munich (without districts) and applies downsampling because the USGS Earth Explorer only permits <500 vertices.
