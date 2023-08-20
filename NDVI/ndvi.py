@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image
 import argparse
 from read_write_functions import bands_to_array, create_out_dir
+from evaluate_index import evaluate_index
 
 
 def save_sc_geotiff(sc_ndvi, meta, name='sc-ndvi'):
@@ -59,13 +60,11 @@ if __name__ == "__main__":
     ndvi = np.divide(b5nearIR - b4red,
                      b5nearIR + b4red + np.finfo(float).eps)  # has type 'float32'
 
-    # Adjust values (s. docstring of <adjust_values>)
-    # TODO: Use <adjust_values()> from <adjust_values.py> <17-08-2023>
-    min, max = 0.0, 0.4
     # truncate values
+    # especially to remove negative values
+    # print(f"{ndvi.min() = }\n{ndvi.max() = }")
+    min, max = 0., 1.
     ndvi = np.clip(ndvi, min, max)
-    # scale [.0, .4] to [.0, 1.]
-    ndvi = ndvi * 2.5
 
     # Create a colormap using LinearSegmentedColormap
     #   Own colormap because built-in <YlGn> maps white, i.e. 'nodata' onto bright yellow which doesn't look appealing 'outside' the image. I prefere plain white.
@@ -96,3 +95,6 @@ if __name__ == "__main__":
 
     # Save one channel NDVI image as geotiff
     save_sc_geotiff(ndvi, out_meta.copy())
+
+    """ Evaluate NDVI """
+    evaluate_index('NDVI', ndvi, .75, mask)

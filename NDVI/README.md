@@ -20,8 +20,8 @@ I use `numpy`, `rasterio`, `geopandas`, `shapely` and `matplotlib` to conduct al
 - [WIP] [make_rgb.py](./make_rgb.py): Combines the red, green and blue bands to an RGB file.
 
 ## Produced images
-The NDVI, data was collected on 2023-03-28, the greener, the more vegetation:
-![](./USGS/image_working_dir/NDVI/out/legend_cmap_ndvi.png)
+The NDVI, data was collected on 2023-07-29, the greener, the more vegetation:
+![](./USGS/image_working_dir/ndvi_2022-07-18/out/legend_cmap_ndvi.png)
 (`matplotlib`'s scaling of the image is lower than the original file. I don't know why and how to zoom/scale it.)  
 Output of [evaluate_NDVI.py](./evaluate_NDVI.py):
 ```text
