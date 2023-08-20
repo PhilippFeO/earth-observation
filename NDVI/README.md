@@ -7,6 +7,7 @@ This directory documents my calculation of the NDVI of Munich. Via [USGS Earth E
 I use `numpy`, `rasterio`, `geopandas`, `shapely` and `matplotlib` to conduct all operations.
 
 ## Roadmap
+Exploring more indices (maybe related to water)
 ~~Evaluate quantitatively the NDVI~~ (-> [evaluate_NDVI.py](./evaluate_NDVI.py))  
 ~~Use a Geopolygon to filter the city of Munich and calculate it's NDVI.~~
 
