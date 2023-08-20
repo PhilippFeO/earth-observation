@@ -1,6 +1,9 @@
 import numpy as np
 import rasterio
 import os
+import matplotlib.pyplot as plt
+
+""" Function regarding saving images """
 
 
 def bands_to_array(bands_dir: str,
@@ -40,6 +43,9 @@ def bands_to_array(bands_dir: str,
     return bands, out_meta
 
 
+""" Function regarding saving images """
+
+
 def create_out_dir(bands_dir: str) -> str:
     """Create the output directory':bands_dir:/out' for the produced image.
 
@@ -53,3 +59,25 @@ def create_out_dir(bands_dir: str) -> str:
     except FileExistsError:  # Error occurs when <out_dir> exists; this is nothing to worry about
         pass
     return out_dir
+
+
+def save_cmap_legend(index_array, cmap, path_to_image):
+    ''' Save gradient NDWI using a matplotlib plot and display a color gradient legend based on <cmap> '''
+    width_pixels = 1000
+    height_pixels = 1000
+    # Convert to inches
+    plt.figure(figsize=(width_pixels / 100, height_pixels / 100))
+
+    plt.imshow(index_array, cmap=cmap)
+    plt.colorbar()  # Show color gradient, s. doc for setting ticks
+    # plt.show()
+    plt.axis('off')
+    plt.savefig(path_to_image)
+
+
+def save_sc_geotiff(sc_index, meta, path_to_image):
+    ''' Save single channel index image as geotiff. <sc_index> contains values in [0, 1] (of type <float32>) '''
+    meta.update(count=1)
+    with rasterio.open(path_to_image, 'w', **meta) as img:
+        sc_index = (sc_index * 255).astype('uint8')
+        img.write(sc_index, 1)
