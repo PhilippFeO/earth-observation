@@ -1,8 +1,8 @@
-# NDVI #
+# Satellite Imagery #
 This directory documents my calculation of the NDVI of Munich. Via [USGS Earth Explorer](https://earthexplorer.usgs.gov/) I retrieve the proper satellite imagery form [Landsat 8 – Wikipedia](https://en.wikipedia.org/wiki/Landsat_8) and crop Munich out. The steps include:
   - Cropping Munich's geopolygon 
-  - Preprocessing values for higher quality results (f.i. not whole 16bit color range is exploited)
-  - Calculating NDVI
+  - Preprocessing data for higher quality results (f.i. not whole 16bit color range is exploited)
+  - Calculating an index, f.e. [NDVI – Wikipedia](https://en.wikipedia.org/wiki/Normalized_difference_vegetation_index) or [NDWI – Wikipedia](https://en.wikipedia.org/wiki/Normalized_difference_water_index), evaluating vegetation or water respectively
   - Saving image/generating plot
 I use `numpy`, `rasterio`, `geopandas`, `shapely` and `matplotlib` to conduct all operations.
 
@@ -23,7 +23,8 @@ Exploring more indices (maybe related to water)
 - [WIP] [make_rgb.py](./make_rgb.py): Combines the red, green and blue bands to an RGB file.
 
 ## Produced images
-The NDVI, data was collected on 2023-07-29, the greener, the more vegetation:
+### NDVI
+The NDVI, data was collected on 2023-07-29, the greener, the more (healthy) vegetation:
 ![](./USGS/image_working_dir/ndvi_2022-07-18/out/legend_cmap_ndvi.png)
 (`matplotlib`'s scaling of the image is lower than the original file. I don't know why and how to zoom/scale it.)  
 Output of [evaluate_index.py](./evaluate_index.py) with `threshold = .75`:
@@ -33,5 +34,10 @@ The average NDVI of Munich is 0.33...
     ...when image was taken.
 ```
 
+### NDWI [WIP]
+The [Normalized difference water index – Wikipedia](Normalized difference water index) is used to monitor changes related to water content in water bodies, using green and NIR wavelengths. Data is from 2023-03-28. The bluer, the more water. Clearly visible is the Isar, some lakes and in the north the olympic regatta area.
+![](./USGS/image_working_dir/ndwi_2022-03-28/out/legend_cmap_ndwi.png)
+
+### RGB
 There is also a RGB image of the scene but GitHub doesn't embed the file and I don't know why. Anyway, you can find it in [./geotiffs/](./geotiffs/) (as `rgb.png`).
 ![](./geotiffs/rgb.tiff)
