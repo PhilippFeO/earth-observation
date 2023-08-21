@@ -3,13 +3,13 @@ workshop-remote-sensing
 *.json
 *.ipynb_checkpoints
 
-NDVI/Remote Sensing Camp.html
-NDVI/multi_band-800*
-NDVI/geotiffs/*
-NDVI/__pycache__/*
-NDVI/info.txt
-NDVI/shapes_and_masks/
-NDVI/USGS
+satellite_imagery/Remote Sensing Camp.html
+satellite_imagery/multi_band-800*
+satellite_imagery/geotiffs/*
+satellite_imagery/__pycache__/*
+satellite_imagery/info.txt
+satellite_imagery/shapes_and_masks/
+satellite_imagery/USGS
 
 todo.txt
 *.zip
