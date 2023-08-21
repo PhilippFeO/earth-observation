@@ -35,7 +35,7 @@ The average NDVI of Munich is 0.33...
 ```
 
 ### NDWI [WIP]
-The [Normalized difference water index – Wikipedia](Normalized difference water index) is used to monitor changes related to water content in water bodies, using green and NIR wavelengths. Data is from 2023-03-28. The bluer, the more water. Clearly visible is the Isar, some lakes and in the north the olympic regatta area.
+The [Normalized difference water index – Wikipedia](https://en.wikipedia.org/wiki/Normalized_difference_water_index) is used to monitor changes related to water content in water bodies, using green and NIR wavelengths. Data is from 2023-03-28. The bluer, the more water. Clearly visible is the Isar, some lakes and in the north the olympic regatta area.
 ![](./USGS/image_working_dir/ndwi_2022-03-28/out/legend_cmap_ndwi.png)
 
 ### RGB
