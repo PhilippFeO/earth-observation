@@ -8,6 +8,6 @@ This is just a little showcase of the images I calculated. An explanation is giv
 NASA's EONET API tracks natural events like storms, volcanoes, droughts, floods, etc.
 ![](./eonet/eonet-data/eonet_events_plot.png)
 
-### NDVI of Munich ([Go to project](./NDVI/))
-The NDVI is a method to calculate the amount of vegetation using the red and near infrared spectrum captured by a satellite.
+### Satellite imagery of Munich ([Go to project](./satellite_imagery/))
+The NDVI is a method to calculate the amount of vegetation using the red and near infrared spectrum captured by a satellite. The higher (greener) the values, the more (healthy) vegetation.
 ![](./NDVI/USGS/image_working_dir/ndvi_2022-07-18/out/legend_cmap_ndvi.png)
