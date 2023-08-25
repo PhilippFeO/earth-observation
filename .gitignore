@@ -11,5 +11,5 @@ satellite_imagery/info.txt
 satellite_imagery/shapes_and_masks/
 satellite_imagery/USGS
 
-todo.txt
+*.txt
 *.zip
