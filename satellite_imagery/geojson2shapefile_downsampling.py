@@ -16,7 +16,7 @@ import geopandas as gpd
 
 # 1. Load the GeoJSON of Munich's districts
 # The file is available under https://geoportal.muenchen.de/geoserver/opendata/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=opendata:vablock_stadtbezirk_opendata&outputFormat=application/json
-munich_dir = '~/NDVI/Munich'
+munich_dir = './shapes_and_masks/munich/'
 gdf = gpd.read_file(f'{munich_dir}/Munich-Districts.geojson')
 
 
@@ -65,7 +65,6 @@ mgdf = gpd.GeoDataFrame(d, crs='EPSG:25832')
 mgdf.to_file(f'{munich_dir}/Munich-downsampled.geojson', driver='GeoJSON')
 mgdf.to_file(f'{munich_dir}/Munich-downsampled.shp')
 
-
 # 4.2 High resolution polygon (with exclaves)
 # from shapely.geometry import MultiPolygon
 # munich_complete_multipoly = MultiPolygon([munich_poly,
@@ -75,3 +74,11 @@ mgdf.to_file(f'{munich_dir}/Munich-downsampled.shp')
 # mmgdf = gpd.GeoDataFrame(d, crs='EPSG:25832')
 # mmgdf['flache_qm'] = mmgdf.area
 # mmgdf.to_file('Munich.geojson', driver='GeoJSON')
+
+# 4.3 Buffered version of munich_dir
+d = {'name': ['München'], 'geometry': mgdf.buffer(5000)}
+m_buffered = gpd.GeoDataFrame(d, crs='EPSG:25832')
+m_buffered.to_file(f'{munich_dir}/munich-buffered.shp')
+
+#
+print(mgdf.centroid)
