@@ -20,6 +20,14 @@ p.add_argument("GeoTIFF",
 p.add_argument("shapefile",
                help="Shapefile containing the geometry to crop from a GeoTIFF.",
                type=str)
+p.add_argument("mask_path",
+               help="Name of the mask resembling the geometry",
+               type=str)
+p.add_argument("file_prefix",
+               help="Prefix for the cropped image file name.",
+               nargs='?',
+               default='Masked',
+               type=str)
 args = p.parse_args()
 
 # Load geometry (of Munich)
@@ -49,11 +57,11 @@ out_meta.update({"driver": "GTiff",
 # print(out_meta)
 
 # <file> ends in .TIF, no extension needed
-with rasterio.open(f"{folder}/Masked_{file}", "w", **out_meta) as dest:
+with rasterio.open(f"{folder}/{args.file_prefix}_{file}", "w", **out_meta) as dest:
     dest.write(out_image)
 
 # Save the mask (for further calculations as in './ndvi.py')
 out_mask = out_image.mask[0]
 # <~out_mask> inverts masks (I need it vice versa than provided by rasterio)
-np.save('./shapes_and_masks/munich/munich_mask.npy', ~out_mask)
+np.save(args.mask_path, ~out_mask)
 # show(source=out_image.data, alpha=a)
