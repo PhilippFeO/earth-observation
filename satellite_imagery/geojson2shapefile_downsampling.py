@@ -17,7 +17,7 @@ import geopandas as gpd
 # 1. Load the GeoJSON of Munich's districts
 # The file is available under https://geoportal.muenchen.de/geoserver/opendata/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=opendata:vablock_stadtbezirk_opendata&outputFormat=application/json
 munich_dir = './shapes_and_masks/munich/'
-gdf = gpd.read_file(f'{munich_dir}/Munich-Districts.geojson')
+gdf = gpd.read_file(f'{munich_dir}/munich-districts.geojson')
 
 
 # Munich has two two small enclaves belonging to _Untergiesing-Harlaching_ and _Thalkirchen-Obersendling-Forstenried-Fürstenried-Solln_. Because the Polygon has to be downsampled to <500 Vertices for the USGS Earth Explorer and the algorithm doesn't work with MultiPolygons only with one single Polygon, these will be removed.
@@ -62,8 +62,8 @@ print("Downsampled number of points:", len(munich_downsampled.exterior.coords))
 # 4.1 Downsampled Munich (without exclaves)
 d = {'name': ['München'], 'geometry': munich_downsampled}
 mgdf = gpd.GeoDataFrame(d, crs='EPSG:25832')
-mgdf.to_file(f'{munich_dir}/Munich-downsampled.geojson', driver='GeoJSON')
-mgdf.to_file(f'{munich_dir}/Munich-downsampled.shp')
+mgdf.to_file(f'{munich_dir}/munich-ds.geojson', driver='GeoJSON')
+mgdf.to_file(f'{munich_dir}/munich-ds.shp')
 
 # 4.2 High resolution polygon (with exclaves)
 # from shapely.geometry import MultiPolygon
@@ -75,10 +75,7 @@ mgdf.to_file(f'{munich_dir}/Munich-downsampled.shp')
 # mmgdf['flache_qm'] = mmgdf.area
 # mmgdf.to_file('Munich.geojson', driver='GeoJSON')
 
-# 4.3 Buffered version of munich_dir
+# 4.3 Buffered version of Munich
 d = {'name': ['München'], 'geometry': mgdf.buffer(5000)}
 m_buffered = gpd.GeoDataFrame(d, crs='EPSG:25832')
 m_buffered.to_file(f'{munich_dir}/munich-buffered.shp')
-
-#
-print(mgdf.centroid)
