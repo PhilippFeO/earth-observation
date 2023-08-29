@@ -1,7 +1,11 @@
 import numpy as np
 import rasterio
 import os
+import matplotlib.image
 import matplotlib.pyplot as plt
+from matplotlib.cm import ScalarMappable
+from apply_colormap import apply_colormap
+from embed_geometry import embed_geometry
 
 """ Function regarding saving images """
 
@@ -81,3 +85,71 @@ def save_sc_geotiff(sc_index, meta, path_to_image):
     with rasterio.open(path_to_image, 'w', **meta) as img:
         sc_index = (sc_index * 255).astype('uint8')
         img.write(sc_index, 1)
+
+
+def generate_plots(out_dir: str,
+                   index_name: str,
+                   index,
+                   out_meta: dict,
+                   colors: list[str, ...],
+                   boundary: bool,
+                   shape_mask_dir: str,
+                   shape_mask_name: str) -> None:
+    """Superlevel function to create all plots.
+
+    :out_dir: Directory where plots are saved.
+    :index_name: Name of the index to generate plots for.
+    :index: Array containing the index values.
+    :out_meta: Meta data for the single channel GeoTIFF.
+    :colors: List of colors defining a Colormap.
+    :boundary: Embed the boundary of the area of interest into the plot.
+    :shape_mask_dir: Directory containing the shape (.shp) and and mask ('.npy') of the area of interest.
+    :shape_mask_name: Name of the shapefile and mask without their extension (because they differ, .shp & .npy respectively).
+    :returns: None
+
+    """
+    # cmap_index is a RGBA array
+    cmap_index, color_map = apply_colormap(index, colors)
+
+    # Replace alpha channel by mask
+    mask_name = f"{shape_mask_name}.npy"
+    mask = np.load(os.path.join(shape_mask_dir, mask_name))
+    cmap_index[:, :, 3] = mask
+
+    """Save images."""
+    # Create output directory for produced images
+    out_dir = create_out_dir(out_dir)
+
+    """Save different configurations and formats"""
+    # Embed boundary if wished
+    shape_name = f"{shape_mask_name}.shp"
+    ax = embed_geometry(os.path.join(shape_mask_dir, shape_name),
+                        cmap_index,
+                        out_meta,
+                        boundary)
+    path_to_image = os.path.join(out_dir, f"{index_name}")
+    # print(path_to_image)
+    plt.savefig(path_to_image)
+    # Add colorbar
+    cbar = plt.colorbar(ScalarMappable(cmap=color_map), ax=ax)
+    cbar.ax.tick_params(labelsize=30)
+    # Save with boundary and legend
+    path_to_image = os.path.join(out_dir, f"legend_{index_name}.png")
+    plt.savefig(path_to_image)
+
+
+    # Saving np-array as PNG for valid transparency (not embedded in a plot)
+    path_to_image = os.path.join(out_dir, f"cmap_{index_name}.png")
+    matplotlib.image.imsave(path_to_image, cmap_index)
+
+    # Matplotlib plot with color gradient legend
+    # path_to_image = os.path.join(out_dir, 'legend_cmap_index.png')
+    # save_cmap_legend(cmap_index, color_map, path_to_image,
+    # x_boundary=x, y_boundary=y)
+
+    # One channel index image as geotiff
+    path_to_image = os.path.join(out_dir, f"sc_{index_name}.geotiff")
+    save_sc_geotiff(index, out_meta.copy(), path_to_image)
+    #
+    # """ Evaluate index """
+    # evaluate_index(index_name, index, .75, mask)

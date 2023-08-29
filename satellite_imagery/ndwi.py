@@ -1,17 +1,13 @@
 import argparse
 import numpy as np
-import os
-import matplotlib.image
-from read_write_functions import bands_to_array, create_out_dir, save_cmap_legend, save_sc_geotiff
-from evaluate_index import evaluate_index
-from apply_colormap import apply_colormap
+from read_write_functions import bands_to_array, generate_plots
 
 
 p = argparse.ArgumentParser("ndwi")
 p.add_argument("image_dir",
                help="Directory containing the bands for calculating the NDWI.",
                nargs='?',
-               default='./USGS/image_working_dir/ndwi_2022-03-28/',
+               default='./USGS/image_working_dir/ndwi_2022-05-15',
                type=str)
 args = p.parse_args()
 
@@ -39,30 +35,12 @@ ndwi = np.clip(ndwi, min, max)
 ndwi = ndwi / max
 print("\nImage values (not calculated ones) were manipulated such that visual results are more appealing.\n")
 
-"""Apply colormap and insert mask."""
-colors = ["yellow", "blue"]
-# cmap_ndwi is a RGBA array
-cmap_ndwi, color_map = apply_colormap(ndwi, colors)
-
-# Replace alpha channel by mask
-mask = np.load('./shapes_and_masks/munich/munich_mask.npy')
-cmap_ndwi[:, :, 3] = mask
-
-""" Save images """
-# Create output directory for produced images
-out_dir = create_out_dir(args.image_dir)
-
-# Saving np-array as PNG for valid transparency (not embedded in a plot)
-path_to_image = os.path.join(out_dir, 'cmap_ndwi.png')
-matplotlib.image.imsave(path_to_image, cmap_ndwi)
-
-# matplotlib plot with color gradient legend
-path_to_image = os.path.join(out_dir, 'legend_cmap_ndwi.png')
-save_cmap_legend(cmap_ndwi, color_map, path_to_image)
-
-# One channel ndwi image as geotiff
-path_to_image = os.path.join(out_dir, 'sc_ndwi.geotiff')
-save_sc_geotiff(ndwi, out_meta.copy(), path_to_image)
-
-""" Evaluate NDWI """
-evaluate_index('NDWI', ndwi * max, .33, mask)
+"""Generate plots of the index"""
+generate_plots(args.image_dir,
+               "ndwi",
+               ndwi,
+               out_meta,
+               colors=["yellow", "blue"],
+               boundary=False,
+               shape_mask_dir="./shapes_and_masks/munich/",
+               shape_mask_name="munich-ds")
