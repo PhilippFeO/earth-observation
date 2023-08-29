@@ -32,7 +32,7 @@ ndwi = np.clip(ndwi, min, max)
 
 
 # Scale for better visual results
-ndwi = ndwi / max
+ndwi = ndwi / max * 10
 print("\nImage values (not calculated ones) were manipulated such that visual results are more appealing.\n")
 
 """Generate plots of the index"""
