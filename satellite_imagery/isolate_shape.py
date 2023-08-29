@@ -21,10 +21,10 @@ p.add_argument("shapefile",
                help="Shapefile containing the geometry to crop from a GeoTIFF.",
                type=str)
 p.add_argument("mask_path",
-               help="Name of the mask resembling the geometry",
+               help="Path to save the mask resembling the geometry",
                type=str)
 p.add_argument("file_prefix",
-               help="Prefix for the cropped image file name.",
+               help="Prefix for the cropped image file name, f.i. 'buffered'.",
                nargs='?',
                default='Masked',
                type=str)
