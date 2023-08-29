@@ -4,7 +4,10 @@ from rasterio.plot import show
 import matplotlib.pyplot as plt
 
 
-def embed_geometry(geometry_file: str, index: np._typing.NDArray, meta: dict):
+def embed_geometry(geometry_file: str,
+                   index: np._typing.NDArray,
+                   meta: dict,
+                   boundary: bool):
     """Embed a geometry geographically correct on a cropped satellite image using rasterio and geopandas.
 
     :geometry_file: Path to the file holding the geometry, fi. the boundary of a city
@@ -29,7 +32,8 @@ def embed_geometry(geometry_file: str, index: np._typing.NDArray, meta: dict):
          transform=meta['transform'],
          ax=ax)
     # Add geometry, fi. boundary via GeoPandas
-    mgdf.plot(ax=ax, color='black', linewidth=6)
+    if boundary:
+        mgdf.plot(ax=ax, color='black', linewidth=2)
     # Some settings
     plt.axis('off')
     return ax
