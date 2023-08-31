@@ -8,7 +8,7 @@ I use `numpy`, `rasterio`, `geopandas`, `shapely` and `matplotlib` to conduct al
 
 ## Roadmap
 Exploring more indices (maybe related to water)  
-~~Evaluate quantitatively the NDVI~~ (-> [evaluate_NDVI.py](./evaluate_NDVI.py))  
+~~Evaluate quantitatively the NDVI~~
 ~~Use a Geopolygon to filter the city of Munich and calculate it's NDVI.~~
 
 ## Overview
@@ -20,17 +20,11 @@ Exploring more indices (maybe related to water)
 
 ## Produced images
 ### NDVI
-The NDVI, data was collected on 2023-05-15, the greener, the more (healthy) vegetation:
-![](./USGS/image_working_dir/ndvi_2022-05-15/out/legend_ndvi.png)
+The NDVI, data was collected on 2022-05-15, the greener, the more (healthy) vegetation:
+![](./USGS/image_working_dir/ndvi_2022-05-15/out/legend_NDVI.png)
 (`matplotlib`'s scaling of the image is lower than the original file. I don't know why and how to zoom/scale it.)  
-Output of [evaluate_index.py](./evaluate_index.py) with `threshold = .75`:
-```text
-The average NDVI of Munich is 0.33...
-0.02% of Munich have an NDVI > .75...
-    ...when image was taken.
-```
 
-### NDWI [WIP]
-The [Normalized difference water index – Wikipedia](https://en.wikipedia.org/wiki/Normalized_difference_water_index) is used to monitor changes related to water content in water bodies, using green and NIR wavelengths. Data is from 2023-05-15. Clearly visible is the Isar, some lakes and in the north the olympic regatta area.
-![](./USGS/image_working_dir/ndwi_2022-05-15/out/cmap_ndwi.png)  
+### NDWI
+The [Normalized difference water index – Wikipedia](https://en.wikipedia.org/wiki/Normalized_difference_water_index) is used to monitor changes related to water content in water bodies, using green and NIR wavelengths. Data is from 2022-05-15. Clearly visible is the Isar, some lakes and in the north the olympic regatta area.
+![](./USGS/image_working_dir/ndwi_2022-05-15/out/cmap_NDWI.png)  
 Disclaimer: The values were multiplied by 10 to increase visibility.
