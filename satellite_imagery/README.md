@@ -15,9 +15,6 @@ Exploring more indices (maybe related to water)
 - [adjust_values.py](./adjust_values.py): Satellite data must be clipped to improve quality. Full explanation given in the file directly.
 - [geojson2shapefile_downsampling.py](./geojson2shapefile_downsampling.py): Converts a GeoJSON file of the city of Munich containing it's districts into a Shapefile resembling the border of Munich (without districts) and applies downsampling because the USGS Earth Explorer only permits <500 vertices.
 - [isolate_shape.py](./isolate_shape.py): Corps a geometry saved as a shapefile from a GeoTIFF and also it's according mask as boolean array.
-- [ndvi.py](./ndvi.py): Calculates the NDVI; currently it produces a bunch of images `GeoTIFF`s and `PNG`s, because I don't know which format works best for upcoming tasks (probably `GeoTIFF` due to additional embedded geo-metadata).
-- [ndwi.py](./ndwi.py): Same as [ndvi.py](./ndvi.py) but calculating the NDWI.
-- [read_write_functions.py](./read_write_functions.py): Helper functions for reading and writing GeoTIFFs as well as creating plots, f.i. reading certain bands in the correct order.
 - [WIP] [make_rgb.py](./make_rgb.py): Combines the red, green and blue bands to an RGB file.
 
 ## Produced images
