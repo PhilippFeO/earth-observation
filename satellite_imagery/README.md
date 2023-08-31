@@ -14,7 +14,6 @@ Exploring more indices (maybe related to water)
 ## Overview
 - [apply_colormap.py](./apply_colormap.py): Color map the calculated index to have better visuals (and no gray scale image).
 - [adjust_values.py](./adjust_values.py): Satellite data must be clipped to improve quality. Full explanation given in the file directly.
-- [evaluate_index](./evaluate_index.py): Evaluate a given index quantitatively by calculating the average and percentage where index > `threshold`; s. "Produces images" for example output.
 - [geojson2shapefile_downsampling.py](./geojson2shapefile_downsampling.py): Converts a GeoJSON file of the city of Munich containing it's districts into a Shapefile resembling the border of Munich (without districts) and applies downsampling because the USGS Earth Explorer only permits <500 vertices.
 - [isolate_shape.py](./isolate_shape.py): Corps a geometry saved as a shapefile from a GeoTIFF and also it's according mask as boolean array.
 - [ndvi.py](./ndvi.py): Calculates the NDVI; currently it produces a bunch of images `GeoTIFF`s and `PNG`s, because I don't know which format works best for upcoming tasks (probably `GeoTIFF` due to additional embedded geo-metadata).
