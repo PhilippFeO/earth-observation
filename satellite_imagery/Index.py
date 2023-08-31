@@ -5,7 +5,7 @@ import numpy.typing as npt
 import matplotlib.image
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
-from apply_colormap import apply_colormap
+from matplotlib.colors import LinearSegmentedColormap
 from embed_geometry import embed_geometry
 
 
@@ -84,8 +84,9 @@ class Index:
         :returns: None
 
         """
-        # cmap_index is a RGBA array
-        cmap_index, color_map = apply_colormap(self.index, colors)
+        # Apply colormap; Result is a RGBA array
+        color_map = LinearSegmentedColormap.from_list("", colors)
+        cmap_index = color_map(self.index)
 
         # Replace alpha channel by mask
         mask_name = f"{shape_mask_name}.npy"
