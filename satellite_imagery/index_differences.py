@@ -1,3 +1,4 @@
+import os
 import rasterio
 import numpy as np
 import matplotlib.pyplot as plt
@@ -92,7 +93,13 @@ cbar.ax.set_xticklabels((-1., .5, .0, .5, 1.))
 plt.tight_layout()
 # plt.show()
 
-path_to_image = './USGS/image_working_dir/diff'
+out_dir = './USGS/image_working_dir/ndvi_differences'
+try:
+    os.mkdir(out_dir)
+    print(f"Created:\n\t{out_dir}")
+except FileExistsError:
+    pass
+path_to_image = os.path.join(out_dir, 'ndvi_difference.png')
 plt.savefig(path_to_image)
 
 
