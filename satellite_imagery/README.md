@@ -23,6 +23,10 @@ Exploring more indices (maybe related to water)
 The NDVI, data was collected on 2022-05-15, the greener, the more (healthy) vegetation:
 ![](./USGS/image_working_dir/ndvi_2022-05-15/out/legend_NDVI.png)
 (`matplotlib`'s scaling of the image is lower than the original file. I don't know why and how to zoom/scale it.)  
+#### NDVI differences
+The image below shows the development of indices in two intervals. Red indicates a decrease in the NDVI, green an increase, ie. reduced/improved vegetation health.
+![](./USGS/image_working_dir/ndvi_difference/ndvi_difference.png)
+(The NDVI is in [0, 1], hence it's difference in [-1, 1].)
 
 ### NDWI
 The [Normalized difference water index – Wikipedia](https://en.wikipedia.org/wiki/Normalized_difference_water_index) is used to monitor changes related to water content in water bodies, using green and NIR wavelengths. Data is from 2022-05-15. Clearly visible is the Isar, some lakes and in the north the olympic regatta area.
