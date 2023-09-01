@@ -74,7 +74,7 @@ for i, data_pair in enumerate(pairwise(zip(ndvis, dates))):
 
     ax = axs[i]
     ax.axis('off')
-    ax.set_title(f"From {date2} to {date1}")
+    ax.set_title(f"From {date1} to {date2}")
     # ax.imshow(cmap_diff) doesn't work because geographical information is lost
     # Rasterio preserves them.
     # => Adding further geo information like boundary with geopandas possible
