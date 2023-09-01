@@ -149,7 +149,8 @@ class NDVI(Index):
 
     """Class for calculating the NDVI."""
 
-    def __init__(self, band_order: tuple[str, ...],
+    def __init__(self,
+                 band_order: tuple[str, ...],
                  img_dir: str):
         Index.__init__(self, band_order, img_dir)
 
@@ -165,7 +166,8 @@ class NDWI(Index):
 
     """Calculate the NDWI"""
 
-    def __init__(self, band_order: tuple[str, ...],
+    def __init__(self,
+                 band_order: tuple[str, ...],
                  img_dir: str):
         Index.__init__(self, band_order, img_dir)
 
