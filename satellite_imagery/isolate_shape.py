@@ -39,11 +39,11 @@ geotiff = args.GeoTIFF
 folder, file = split(geotiff)  # split path to GeoTIFF
 
 # Retrieve mask of <geometry>, ie. a boolean array resembling the geometry
-#   Without "filled=False", outside the shape is filled with <nodata>/0 (and
+#   Without "filled=False", outside the shape filled with <nodata>/0 (and
 #   displayed as black).
 #   This is not desirable because this value might occure within the shape
 #   and decreases accuracy.
-with rasterio.open(f'{folder}/{file}', 'r') as src:
+with rasterio.open(geotiff, 'r') as src:
     # out_image, out_transform = mask(src, geometry, crop=True)
     out_image, out_transform = mask(src, geometry, crop=True, filled=False)
 
