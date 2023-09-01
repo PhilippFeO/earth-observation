@@ -1,5 +1,5 @@
 # Satellite Imagery #
-This directory documents my calculation of the NDVI of Munich. Via [USGS Earth Explorer](https://earthexplorer.usgs.gov/) I retrieve the proper satellite imagery form [Landsat 8 – Wikipedia](https://en.wikipedia.org/wiki/Landsat_8) and crop Munich out. The steps include:
+This directory documents my calculation of the NDVI of Munich. Via [USGS Earth Explorer](https://earthexplorer.usgs.gov/) I retrieve the proper satellite imagery form [Landsat 8 – Wikipedia](https://en.wikipedia.org/wiki/Landsat_8). The steps include:
   - Cropping Munich's geopolygon 
   - Preprocessing data for higher quality results (f.i. not whole 16bit color range is exploited)
   - Calculating an index, f.e. [NDVI – Wikipedia](https://en.wikipedia.org/wiki/Normalized_difference_vegetation_index) or [NDWI – Wikipedia](https://en.wikipedia.org/wiki/Normalized_difference_water_index), evaluating vegetation or water respectively
