@@ -1,12 +1,12 @@
 from Index import NDVI, NDWI
 
-ndvi = False
-ndwi = True
+ndvi = True
+ndwi = False
 
 """NDVI"""
 if ndvi:
     Ndvi = NDVI(('B4', 'B5'),
-                './USGS/image_working_dir/ndvi_2022-05-15/')
+                './USGS/image_working_dir/ndvi_2022-05-31/')
     Ndvi.calculate()
     Ndvi.generate_plots(('red', 'yellow', 'green'),
                         False,
