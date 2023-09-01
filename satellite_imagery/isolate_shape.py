@@ -6,7 +6,7 @@ Usage:
 
 """
 
-from os.path import split
+import os
 from rasterio.mask import mask
 import rasterio
 import fiona
@@ -14,7 +14,7 @@ import argparse
 import numpy as np
 
 p = argparse.ArgumentParser("isolate_shape")
-p.add_argument("GeoTIFF",
+p.add_argument("geotiff",
                help="The GeoTIFF to crop a geometry from.",
                type=str)
 p.add_argument("shapefile",
@@ -35,15 +35,15 @@ with fiona.open(args.shapefile) as shapefile:
     geometry = [feature["geometry"] for feature in shapefile]
 
 # load the raster, mask it by the polygon and crop it
-geotiff = args.GeoTIFF
-folder, file = split(geotiff)  # split path to GeoTIFF
+src_data_dir, file = os.path.split(args.geotiff)  # split path to GeoTIFF
+print(os.path.split(src_data_dir))
 
 # Retrieve mask of <geometry>, ie. a boolean array resembling the geometry
 #   Without "filled=False", outside the shape filled with <nodata>/0 (and
 #   displayed as black).
 #   This is not desirable because this value might occure within the shape
 #   and decreases accuracy.
-with rasterio.open(geotiff, 'r') as src:
+with rasterio.open(args.geotiff, 'r') as src:
     # out_image, out_transform = mask(src, geometry, crop=True)
     out_image, out_transform = mask(src, geometry, crop=True, filled=False)
 
@@ -57,7 +57,7 @@ out_meta.update({"driver": "GTiff",
 # print(out_meta)
 
 # <file> ends in .TIF, no extension needed
-with rasterio.open(f"{folder}/{args.file_prefix}_{file}", "w", **out_meta) as dest:
+with rasterio.open(f"{src_data_dir}/{args.file_prefix}_{file}", "w", **out_meta) as dest:
     dest.write(out_image)
 
 # Save the mask (for further calculations as in './ndvi.py')
