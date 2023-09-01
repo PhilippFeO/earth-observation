@@ -20,13 +20,14 @@ p.add_argument("geotiff",
 p.add_argument("shapefile",
                help="Shapefile containing the geometry to crop from a GeoTIFF.",
                type=str)
-p.add_argument("mask_path",
-               help="Path to save the mask resembling the geometry",
-               type=str)
 p.add_argument("file_prefix",
                help="Prefix for the cropped image_name image_name name, f.i. 'buffered'.",
                nargs='?',
-               default='Masked',
+               default='masked',
+               type=str)
+p.add_argument("mask_path",
+               help="Path to save the mask resembling the geometry",
+               nargs='?',
                type=str)
 args = p.parse_args()
 
@@ -67,7 +68,8 @@ with rasterio.open(out_image_name, "w", **out_meta) as dest:
     dest.write(out_image)
 
 # Save the mask (for further calculations as in './ndvi.py')
-out_mask = out_image.mask[0]
-# <~out_mask> inverts masks (I need it vice versa than provided by rasterio)
-np.save(args.mask_path, ~out_mask)
-# show(source=out_image.data, alpha=a)
+if args.mask_path is not None:
+    out_mask = out_image.mask[0]
+    # <~out_mask> inverts masks (I need it vice versa than provided by rasterio)
+    np.save(args.mask_path, ~out_mask)
+    # show(source=out_image.data, alpha=a)
