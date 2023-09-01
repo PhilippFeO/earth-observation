@@ -24,7 +24,7 @@ p.add_argument("mask_path",
                help="Path to save the mask resembling the geometry",
                type=str)
 p.add_argument("file_prefix",
-               help="Prefix for the cropped image file name, f.i. 'buffered'.",
+               help="Prefix for the cropped image_name image_name name, f.i. 'buffered'.",
                nargs='?',
                default='Masked',
                type=str)
@@ -35,8 +35,13 @@ with fiona.open(args.shapefile) as shapefile:
     geometry = [feature["geometry"] for feature in shapefile]
 
 # load the raster, mask it by the polygon and crop it
-src_data_dir, file = os.path.split(args.geotiff)  # split path to GeoTIFF
-print(os.path.split(src_data_dir))
+src_img_dir, image_name = os.path.split(args.geotiff)  # split path to GeoTIFF
+out_dir = os.path.join(src_img_dir, 'geometries')
+try:
+    os.mkdir(out_dir)
+    print(f'Created:\n\t{out_dir}')
+except FileExistsError:  # Error occurs when <out_dir> exists; this is nothing to worry about
+    pass
 
 # Retrieve mask of <geometry>, ie. a boolean array resembling the geometry
 #   Without "filled=False", outside the shape filled with <nodata>/0 (and
@@ -56,8 +61,9 @@ out_meta.update({"driver": "GTiff",
                  "transform": out_transform})
 # print(out_meta)
 
-# <file> ends in .TIF, no extension needed
-with rasterio.open(f"{src_data_dir}/{args.file_prefix}_{file}", "w", **out_meta) as dest:
+# <image_name> ends in .TIF, no extension needed
+out_image_name = os.path.join(out_dir, f"{args.file_prefix}_{image_name}")
+with rasterio.open(out_image_name, "w", **out_meta) as dest:
     dest.write(out_image)
 
 # Save the mask (for further calculations as in './ndvi.py')
