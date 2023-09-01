@@ -6,11 +6,12 @@ ndwi = False
 """NDVI"""
 if ndvi:
     Ndvi = NDVI(('B4', 'B5'),
-                './USGS/image_working_dir/ndvi_2022-05-31/')
+                './USGS/image_working_dir/ndvi_2022-07-18_bbox')
     Ndvi.calculate()
     Ndvi.generate_plots(('red', 'yellow', 'green'),
-                        False,
                         './shapes_and_masks/munich/',
+                        'munich-bbox',
+                        True,
                         'munich-ds')
 
 """NDWI"""

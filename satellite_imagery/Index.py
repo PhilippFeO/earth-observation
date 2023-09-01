@@ -6,6 +6,7 @@ import matplotlib.image
 import matplotlib.pyplot as plt
 from matplotlib.cm import ScalarMappable
 from matplotlib.colors import LinearSegmentedColormap
+from rasterio.plot import show
 from embed_geometry import embed_geometry
 
 
@@ -25,7 +26,7 @@ class Index:
     def __read_bands(self):
         """Reads the bands specified in :band_order: into an array (keeping the order).
 
-        :band_order: The order of bands to fill the output array. Since the function iterates over all files in :bands_dir: and the order is not arbitrary, it is necessary to define the order in which the bands are red into the output array. 
+        :band_order: The order of bands to fill the output array. Since the function iterates over all files in :bands_dir: and the order is not arbitrary, it is necessary to define the order in which the bands are red into the output array.
         :returns: Tuple containing an array containing all bands as they were defined in :band_order: and the corresponding meta data
 
         """
@@ -72,15 +73,17 @@ class Index:
 
     def generate_plots(self,
                        colors: list[str, ...],
-                       boundary: bool,
                        shape_mask_dir: str,
-                       shape_mask_name: str) -> None:
+                       shape_mask_name: str,
+                       boundary: bool = False,
+                       embedded_geom: str = None) -> None:
         """Superlevel function to create all plots.
 
         :colors: List of colors defining a Colormap.
         :boundary: Embed the boundary of the area of interest into the plot.
         :shape_mask_dir: Directory containing the shape (.shp) and and mask ('.npy') of the area of interest.
         :shape_mask_name: Name of the shapefile and mask without their extension (because they differ, .shp & .npy respectively).
+        :embedded_geom: TODO
         :returns: None
 
         """
@@ -98,15 +101,27 @@ class Index:
         out_dir = self.__create_out_dir()
 
         """Save different configurations and formats"""
+        fig, ax = plt.subplots()
+        x, y = cmap_index.shape[0], cmap_index.shape[1]
+        # Set the desired figure size in inches
+        x, y = y / 100 * 2, x / 100 * 2
+        fig.set_size_inches(x, y)
+        fig.tight_layout()
+        ax.axis('off')
+        # Place raster on axes
+        # rasterio needs (height, width, bands) order
+        show(cmap_index.transpose(2, 0, 1),
+             transform=self.geotiff_meta['transform'],
+             ax=ax)
         # Embed boundary (if wished)
-        shape_name = f"{shape_mask_name}.shp"
-        ax = embed_geometry(os.path.join(shape_mask_dir, shape_name),
-                            cmap_index,
-                            self.geotiff_meta,
-                            boundary)
+        if boundary:
+            geom_file = os.path.join(shape_mask_dir, f"{embedded_geom}.shp")
+            embed_geometry(geom_file, ax)
         # Save without transparencs
         path_to_image = os.path.join(out_dir, f"{self.index_name}")
-        plt.savefig(path_to_image)
+        # TODO: Kann nicht invertiert werden und sieht mit Ferblegende blöd aus :(. Aber ohne tight_layout() habe ich kein SCHÖNES Bild mit transparentem Hintergrund, da ich die Matrix später per matplot.image speichere und die Matrix die Geometrie nicht enthält. <01-09-2023>
+        #   Idee: Rand hinzufügen
+        fig.savefig(path_to_image, facecolor='none')
 
         # Save with colorbar legend
         # Add colorbar
@@ -114,7 +129,7 @@ class Index:
         cbar.ax.tick_params(labelsize=30)
         # Save legend
         path_to_image = os.path.join(out_dir, f"legend_{self.index_name}.png")
-        plt.savefig(path_to_image)
+        fig.savefig(path_to_image)
 
         # Saving with transparency outside area of interest
         path_to_image = os.path.join(out_dir, f"cmap_{self.index_name}.png")
