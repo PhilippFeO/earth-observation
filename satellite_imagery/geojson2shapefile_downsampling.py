@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 """
 From GeoJSON to Shapefile with addtional downsampling
 
@@ -75,7 +73,9 @@ mgdf.to_file(f'{munich_dir}/munich-ds.shp')
 # mmgdf['flache_qm'] = mmgdf.area
 # mmgdf.to_file('Munich.geojson', driver='GeoJSON')
 
-# 4.3 Buffered version of Munich
-d = {'name': ['München'], 'geometry': mgdf.buffer(5000)}
+# 4.3 Bounding box of Munich
+xmin, ymin, xmax, ymax = mgdf.bounds
+mgdf['bbox'] = mgdf.envelope
+d = {'name': ['München'], 'geometry': mgdf['bbox'].buffer(5000)}
 m_buffered = gpd.GeoDataFrame(d, crs='EPSG:25832')
-m_buffered.to_file(f'{munich_dir}/munich-buffered.shp')
+m_buffered.to_file(f'{munich_dir}/munich-bbox.shp')
