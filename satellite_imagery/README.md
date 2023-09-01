@@ -25,8 +25,8 @@ The NDVI, data was collected on 2022-05-15, the greener, the more (healthy) vege
 ![](./USGS/image_working_dir/ndvi_2022-05-15/out/legend_NDVI.png)
 (`matplotlib`'s scaling of the image is lower than the original file. I don't know why and how to zoom/scale it.)  
 #### NDVI over time
-The image below shows the development of indices in two intervals. Red indicates a decrease in the NDVI, green an increase, ie. reduced/improved vegetation health.
-![](./USGS/image_working_dir/ndvi_difference/ndvi_difference.png)
+The image below shows the development of the NDVI over two periods in Munich and it's surroundings. Red indicates a decrease in the NDVI, green an increase, ie. reduced/improved vegetation health.
+![](./USGS/image_working_dir/ndvi_difference/ndvi_difference_bbox.png)
 (The NDVI is in [0, 1], hence it's difference in [-1, 1].)
 
 ### NDWI
