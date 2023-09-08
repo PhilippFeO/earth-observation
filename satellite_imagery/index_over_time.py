@@ -1,4 +1,6 @@
 import os
+import re
+import argparse
 import rasterio
 import numpy as np
 import matplotlib.pyplot as plt
@@ -10,20 +12,34 @@ from itertools import pairwise
 from embed_geometry import embed_geometry
 
 
-may15_img = rasterio.open(
-    './USGS/image_working_dir/ndvi_2022-05-15_bbox/out/sc_NDVI.geotiff')
-# Due to difference negative values may15 emerge => unsigned ints are necessary
-may15 = may15_img.read(1).astype('uint16')
+p = argparse.ArgumentParser(prog='index_over_time')
+p.add_argument('paths',
+               help='Paths to the directories containing the indices to calculate their differences. Should be submitted chronologically from oldest to newest.',
+               nargs='+',
+               type=str)
+args = p.parse_args()
 
-may31_img = rasterio.open(
-    './USGS/image_working_dir/ndvi_2022-05-31_bbox/out/sc_NDVI.geotiff')
-# Due to difference negative values may31 emerge => unsigned ints are necessary
-may31 = may31_img.read(1).astype('uint16')
+dates = []
+ndvis = []
+meta = None
 
-july_img = rasterio.open(
-    './USGS/image_working_dir/ndvi_2022-07-18_bbox/out/sc_NDVI.geotiff')
-# Due to difference negative values may15 emerge => unsigned ints are necessary
-july = july_img.read(1).astype('uint16')
+# Reversed order because iterating pairwise and
+# substracting "the latter from the former" is done
+# first. This guarantees consistency with enumerate().
+for geotiff_path in reversed(args.paths):
+    geotiff = rasterio.open(geotiff_path)
+    # Save meta data, used for embedding the boundary of Munich
+    if meta is None:
+        meta = geotiff.meta
+    data = geotiff.read(1).astype(np.uint16)
+    ndvis.append(data)
+
+    # Retrieve date from the geotiff_path
+    compounds = geotiff_path.split('_')
+    m = re.search(r'\d{4}-\d{2}-\d{2}', geotiff_path)
+    date = m.group(0)
+    dates.append(date)
+
 
 """Configure plot in general"""
 # Set the same font size for tick labels and titles
@@ -33,23 +49,21 @@ plt.rcParams.update({'font.size': font_size})
 fig = plt.figure(figsize=(25, 14))
 fig.suptitle('NDVI over time')
 
-# 2 rows (1 for matrices, 1 for colorbar),
-# 3 columns (2 for matrices, 1 for spacing)
-gs = fig.add_gridspec(2, 3, width_ratios=[6, 1, 6], height_ratios=[4, 1])
+# 2 rows: 1 for matrices, 1 for colorbar
+# columns in pairs: matrix, spacing (except for last matrix)
+n_images = len(args.paths) - 1
+ncol = 2 * n_images - 1
+ncol_pairs = n_images - 1
+w_ratios = ([6, 1] * ncol_pairs) + [6]
+gs = fig.add_gridspec(2, ncol, width_ratios=w_ratios, height_ratios=[4, 1])
 
 # Create subplots for matrices
-ax1 = fig.add_subplot(gs[0, 0])
-ax2 = fig.add_subplot(gs[0, 2])
-# Reversed order because iterating pairwise and
-# substracting "the latter from the former" is done
-# first. This guarantees consistency with enumerate().
-axs = (ax2, ax1)
+axs = tuple(fig.add_subplot(gs[0, i])
+            for i in range((2 * ncol_pairs), -1, -2))
 
-# Same
-dates = ('2022-07-18', '2022-05-31', '2022-05-15')
-ndvis = (july, may31, may15)
 
 """Plot difference"""
+# Here becomes reversed iterating over args.paths important
 for i, data_pair in enumerate(pairwise(zip(ndvis, dates))):
     """Calculate ndvi difference"""
     # numbering reflects chronologic order of the data
@@ -60,7 +74,7 @@ for i, data_pair in enumerate(pairwise(zip(ndvis, dates))):
     diff = diff + 255
     diff = diff / 510
 
-    """Difference may15 be negativ in the first place. Negative values imply
+    """Difference may be negativ in the first place. Negative values imply
     decreased vegetation health. By mapping onto [0, 1] to apply the colormap
     the subinterval [0, .5] resembles these negative values with worsened
     vegetation."""
@@ -79,8 +93,9 @@ for i, data_pair in enumerate(pairwise(zip(ndvis, dates))):
     # Rasterio preserves them.
     # => Adding further geo information like boundary with geopandas possible
     show(cmap_diff.transpose(2, 0, 1),
-         transform=may15_img.meta['transform'],
+         transform=meta['transform'],
          ax=ax)
+    # TODO: Add condition <08-09-2023>
     if True:
         geom_file = './shapes_and_masks/munich/munich-ds.shp'
         embed_geometry(geom_file, ax)
@@ -113,7 +128,8 @@ try:
     print(f"Created:\n\t{out_dir}")
 except FileExistsError:
     pass
-path_to_image = os.path.join(out_dir, 'ndvi_difference_bbox.png')
+dates_str = '_'.join(reversed(dates))
+path_to_image = os.path.join(out_dir, f'ndvi_difference_bbox_{dates_str}.png')
 plt.savefig(path_to_image)
 
 
