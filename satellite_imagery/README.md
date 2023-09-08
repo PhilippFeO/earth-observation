@@ -16,7 +16,7 @@ Exploring more indices (maybe related to water)
 - [geojson2shapefile_downsampling.py](./geojson2shapefile_downsampling.py): Converts a GeoJSON file of the city of Munich containing it's districts into a Shapefile resembling the border of Munich (without districts) and applies downsampling because the USGS Earth Explorer only permits <500 vertices.
 - [isolate_shape.py](./isolate_shape.py): Corps a geometry saved as a shapefile from a GeoTIFF and also it's according mask as boolean array.
 - [Index.py](./Index.py): Class resembling the logic needed to calculate and process an Index like the NDVI.
-- [index_differences.py](./index_differences.py) Calculate the difference over time of consecutive indices (s. `#### NDVI over time`)
+- [index_over_time.py](./index_differences.py) Calculate the difference over time of consecutive indices (s. `#### NDVI over time`)
 - [WIP] [make_rgb.py](./make_rgb.py): Combines the red, green and blue bands to an RGB file.
 
 ## Produced images
